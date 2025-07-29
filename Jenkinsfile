@@ -32,4 +32,31 @@ pipeline {
       }
     }
   }
+
+  post {
+    success {
+      emailext(
+        subject: "Jenkins Build Success: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+        body: """Hello,
+
+The Jenkins build succeeded.
+
+You can find the attached APK file.
+
+Build details: ${env.BUILD_URL}
+
+Best,
+Jenkins""",
+        to: 'shabanshaikh7234@gmail.com',    // Change to your email or list
+        attachmentsPattern: 'build/app/outputs/flutter-apk/app-release.apk'
+      )
+    }
+    failure {
+      emailext(
+        subject: "Jenkins Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+        body: "The Jenkins build failed. Please check: ${env.BUILD_URL}",
+        to: 'shabanshaikh7234@gmail.com'    // Change to your email or list
+      )
+    }
+  }
 }
